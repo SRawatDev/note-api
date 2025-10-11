@@ -1,0 +1,95 @@
+Prisma ORM Setup and Usage Guide
+
+Prisma is a modern ORM (Object-Relational Mapping) tool that helps you interact with databases in a type-safe way. Here’s how to set it up and use it in your Node.js project.
+
+
+1. Install Prisma
+
+First, install Prisma as a development dependency:
+npm install prisma --save-dev
+
+
+2. Initialize Prisma in Your Project
+
+Run the following command:
+npx prisma init
+
+
+3. Define Your Database Schema
+
+Open prisma/schema.prisma and define your models. Example:
+
+datasource db {
+  provider = "postgresql" // or "mysql" / "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+
+
+4. Install Prisma Client
+
+Prisma Client is what your code will use to interact with the database:
+
+npm install @prisma/client
+Note: If you haven’t installed Prisma CLI before, you can also do:
+npm install prisma @prisma/client
+
+
+
+5. Generate Prisma Client
+
+After defining your schema, generate the client:
+npx prisma generate
+
+
+6. Push Schema to Database
+
+To create the tables in your database according to your Prisma models:
+
+npx prisma db push
+
+
+7. Using Prisma Client in Your Code
+
+Example usage in Node.js:
+
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const user = await prisma.user.create({
+    data: {
+      name: "John Doe",
+      email: "john@example.com",
+    },
+  });
+
+  console.log(user);
+}
+
+main()
+  .catch(e => console.error(e))
+  .finally(async () => await prisma.$disconnect());
+
+
+
+
+8. Optional: Generate Migration (Recommended for Production)
+
+Instead of db push, use Prisma Migrate to track schema changes:
+
+
+npx prisma migrate dev --name init
+
