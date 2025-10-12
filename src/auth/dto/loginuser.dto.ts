@@ -8,6 +8,6 @@ export class loginUserDto{
     role:Role
 }
 enum Role {
-  admin,
-  user
+  admin = "admin",
+  user = "user"
 }
