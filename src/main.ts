@@ -21,6 +21,7 @@ async function bootstrap() {
         const messages = errors.flatMap((err) =>
           err.constraints ? Object.values(err.constraints) : [],
         );
+        console.log("=========",messages)
         const firstError = messages[0] || 'Validation error';
         return new BadRequestException({
           statusCode: 400,
